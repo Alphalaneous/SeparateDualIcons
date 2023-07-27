@@ -31,6 +31,29 @@ T getFromObjectIndex(CCObject* obj, int index) {
 }
 
 template<typename O, typename T>
+T getFromObjectContentSizeWidthBetween(CCObject* obj, float widthS, float widthE, int index) {
+    CCObject* pObj = nullptr;
+
+    int idx = 0;
+
+    CCARRAY_FOREACH(dynamic_cast<O>(obj)->getChildren(), pObj) {
+        CCNode* currentNode = (CCNode*)pObj;
+        float objWidth = currentNode->getContentSize().width;
+
+        T obj = dynamic_cast<T>(pObj);
+
+        if (instanceof<T>(obj)) {
+            if (objWidth > widthS && objWidth < widthE) {
+                if (idx == index) return obj;
+                idx++;
+            }
+        }
+    }
+    return nullptr;
+}
+
+
+template<typename O, typename T>
 T getFromObjectContentSizeWidth(CCObject* obj, float width, int index) {
     CCObject* pObj = nullptr;
 
@@ -519,12 +542,11 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
 
 
         is2ndPlayer = false;
-
-        CCSprite* unlockTxt = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 105.750, 0);
+        CCSprite* unlockTxt = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(self, 90, 120, 0);
         unlockTxt->setVisible(false);
 
-        CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 38, 0);
-        CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 38, 1);
+        CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(self, 30, 40, 0);
+        CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(self, 30, 40, 1);
 
         selectSpriteP1primary->setColor({ 255, 175, 0 });
         selectSpriteP1secondary->setColor({ 255, 175, 0 });
