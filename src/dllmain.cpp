@@ -640,7 +640,7 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
         CCAction* moveLeft = CCMoveBy::create(0.5, { 5, 0 });
         CCAction* moveRight = CCMoveBy::create(0.5, { -5, 0 });
 
-        CCArray* actions = new CCArray();
+        CCArray* actions = CCArray::create();
         actions->addObject(moveLeft);
         actions->addObject(moveRight);
 
@@ -649,7 +649,7 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
         CCAction* moveLeft2 = CCMoveBy::create(0.5, { -5, 0 });
         CCAction* moveRight2 = CCMoveBy::create(0.5, { 5, 0 });
 
-        CCArray* actions2 = new CCArray();
+        CCArray* actions2 = CCArray::create();
         actions2->addObject(moveLeft2);
         actions2->addObject(moveRight2);
 
