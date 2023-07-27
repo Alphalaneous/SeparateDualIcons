@@ -4,6 +4,7 @@
 #include <random>
 #include <fstream>
 
+bool hasSai = false;
 
 template<typename Base, typename T>
 bool instanceof(const T ptr) {
@@ -145,17 +146,14 @@ public:
 
         usesDefault = !toggler->isOn();
     }
-
+    void ButtonStuff::showSaiAlert(CCObject* target) {
+        auto alertLayer = gd::FLAlertLayer::create(NULL, "SaiModPack Detected", "Okay", NULL, 300, "Remove SaiModPack to use SeparateDualIcons as they are incompatible with each other.");
+        alertLayer->show();
+    }
 };
 
 void setIconColor(gd::GJGarageLayer* self, int ID, bool primary, bool isP2);
-bool (__thiscall* MenuLayer_init)(CCLayer* self);
 
-bool __fastcall MenuLayer_init_H(CCLayer* self, void*) {
-
-    if (!MenuLayer_init(self)) return false;
-    return true;
-}
 
 void setSelectorPosColors(gd::GJGarageLayer* page, bool isP2) {
 
@@ -496,7 +494,22 @@ void __fastcall ListButtonBar_switchedPage_H(gd::ListButtonBar* self, void*, int
     }
 }
 
+bool(__thiscall* MenuLayer_init)(gd::MenuLayer* self);
 
+bool __fastcall MenuLayer_init_H(gd::MenuLayer* self, void*) {
+
+    if (!MenuLayer_init(self)) return false;
+
+
+    if(hasSai){
+        float delay = 1.0f;
+        self->scheduleOnce(schedule_selector(ButtonStuff::showSaiAlert), delay);
+        
+    }
+
+    return true;
+
+}
 
 bool(__thiscall* GJGarageLayer_init)(gd::GJGarageLayer* self);
 
@@ -504,242 +517,242 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
 
     if (!GJGarageLayer_init(self)) return false;
 
-    is2ndPlayer = false;
 
-    CCSprite* unlockTxt = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 105.750, 0);
-    unlockTxt->setVisible(false);
+        is2ndPlayer = false;
 
-    CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 38, 0);
-    CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 38, 1);
+        CCSprite* unlockTxt = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 105.750, 0);
+        unlockTxt->setVisible(false);
 
-    selectSpriteP1primary->setColor({ 255, 175, 0 });
-    selectSpriteP1secondary->setColor({ 255, 175, 0 });
+        CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 38, 0);
+        CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(self, 38, 1);
 
-    selectSpriteP1primary->setTag(16547);
-    selectSpriteP1secondary->setTag(16548);
+        selectSpriteP1primary->setColor({ 255, 175, 0 });
+        selectSpriteP1secondary->setColor({ 255, 175, 0 });
 
-    CCSprite* selectSpriteP2primary = CCSprite::createWithSpriteFrameName("GJ_select_001.png");
-    CCSprite* selectSpriteP2secondary = CCSprite::createWithSpriteFrameName("GJ_select_001.png");
+        selectSpriteP1primary->setTag(16547);
+        selectSpriteP1secondary->setTag(16548);
 
-    selectSpriteP2primary->setColor({ 0, 255, 255 });
-    selectSpriteP2secondary->setColor({ 0, 255, 255 });
+        CCSprite* selectSpriteP2primary = CCSprite::createWithSpriteFrameName("GJ_select_001.png");
+        CCSprite* selectSpriteP2secondary = CCSprite::createWithSpriteFrameName("GJ_select_001.png");
 
-    selectSpriteP2primary->setScale(0.8f);
-    selectSpriteP2secondary->setScale(0.8f);
+        selectSpriteP2primary->setColor({ 0, 255, 255 });
+        selectSpriteP2secondary->setColor({ 0, 255, 255 });
+
+        selectSpriteP2primary->setScale(0.8f);
+        selectSpriteP2secondary->setScale(0.8f);
 
 
-    selectSpriteP2primary->setTag(16549);
-    selectSpriteP2secondary->setTag(16550);
+        selectSpriteP2primary->setTag(16549);
+        selectSpriteP2secondary->setTag(16550);
 
-    self->addChild(selectSpriteP2primary);
-    self->addChild(selectSpriteP2secondary);
+        self->addChild(selectSpriteP2primary);
+        self->addChild(selectSpriteP2secondary);
 
-    CCLabelBMFont* p1Label = CCLabelBMFont::create("P1", "bigFont.fnt");
-    CCLabelBMFont* p1Label2 = CCLabelBMFont::create("P1", "bigFont.fnt");
+        CCLabelBMFont* p1Label = CCLabelBMFont::create("P1", "bigFont.fnt");
+        CCLabelBMFont* p1Label2 = CCLabelBMFont::create("P1", "bigFont.fnt");
 
-    CCLabelBMFont* p2Label = CCLabelBMFont::create("P2", "bigFont.fnt");
-    CCLabelBMFont* p2Label2 = CCLabelBMFont::create("P2", "bigFont.fnt");
+        CCLabelBMFont* p2Label = CCLabelBMFont::create("P2", "bigFont.fnt");
+        CCLabelBMFont* p2Label2 = CCLabelBMFont::create("P2", "bigFont.fnt");
 
-    p1Label->setScale(0.25);
-    p1Label->setPosition({ 10, 31 });
-    p1Label->setColor({ 255, 175, 0 });
+        p1Label->setScale(0.25);
+        p1Label->setPosition({ 10, 31 });
+        p1Label->setColor({ 255, 175, 0 });
 
-    p1Label2->setScale(0.25);
-    p1Label2->setPosition({ 10, 31 });
-    p1Label2->setColor({ 255, 175, 0 });
+        p1Label2->setScale(0.25);
+        p1Label2->setPosition({ 10, 31 });
+        p1Label2->setColor({ 255, 175, 0 });
 
-    p2Label->setScale(0.25);
-    p2Label->setPosition({ 28, 8 });
-    p2Label->setColor({ 0, 255, 255 });
+        p2Label->setScale(0.25);
+        p2Label->setPosition({ 28, 8 });
+        p2Label->setColor({ 0, 255, 255 });
 
-    p2Label2->setScale(0.25);
-    p2Label2->setPosition({ 28, 8 });
-    p2Label2->setColor({ 0, 255, 255 });
+        p2Label2->setScale(0.25);
+        p2Label2->setPosition({ 28, 8 });
+        p2Label2->setColor({ 0, 255, 255 });
 
-    selectSpriteP1primary->addChild(p1Label);
-    selectSpriteP1secondary->addChild(p1Label2);
+        selectSpriteP1primary->addChild(p1Label);
+        selectSpriteP1secondary->addChild(p1Label2);
 
-    selectSpriteP2primary->addChild(p2Label);
-    selectSpriteP2secondary->addChild(p2Label2);
+        selectSpriteP2primary->addChild(p2Label);
+        selectSpriteP2secondary->addChild(p2Label2);
 
-    selectSpriteP1primary->setZOrder(101);
-    selectSpriteP1secondary->setZOrder(101);
+        selectSpriteP1primary->setZOrder(101);
+        selectSpriteP1secondary->setZOrder(101);
 
-    selectSpriteP2primary->setZOrder(101);
-    selectSpriteP2secondary->setZOrder(101);
+        selectSpriteP2primary->setZOrder(101);
+        selectSpriteP2secondary->setZOrder(101);
 
-    gd::CCMenuItemToggler* defaultToggler = gd::CCMenuItemToggler::createWithStandardSprites(self, menu_selector(ButtonStuff::setDefaultP2), 0.7f);
-    defaultToggler->setTag(14736);
-    defaultToggler->setPosition(106, -44);
-    defaultToggler->setScale(0.675f);;
+        gd::CCMenuItemToggler* defaultToggler = gd::CCMenuItemToggler::createWithStandardSprites(self, menu_selector(ButtonStuff::setDefaultP2), 0.7f);
+        defaultToggler->setTag(14736);
+        defaultToggler->setPosition(106, -44);
+        defaultToggler->setScale(0.675f);;
 
+
+
+        CCLabelBMFont* defaultToggleLabel = CCLabelBMFont::create("Default P2", "bigFont.fnt");
+        defaultToggleLabel->setPosition(176, -44);
+        defaultToggleLabel->setScale(0.3);
+        defaultToggleLabel->setAnchorPoint({ 1, .5 });
+
+
+
+        gd::SimplePlayer* mainPlayer = self->m_pPlayerPreview;
+
+        self->removeChild(mainPlayer);
+
+        CCSprite* pointerLeft = CCSprite::createWithSpriteFrameName("navArrowBtn_001.png");
+        CCSprite* pointerRight = CCSprite::createWithSpriteFrameName("navArrowBtn_001.png");
+
+        pointerRight->setFlipX(true);
+        pointerLeft->setScale(0.4f);
+        pointerRight->setScale(0.4f);
+
+        pointerLeft->setTag(34729);
+        pointerRight->setTag(34730);
+
+        pointerLeft->setPosition({ -90, 0 });
+        pointerRight->setPosition({ 90, 0 });
+
+        pointerRight->setVisible(false);
+
+        CCAction* moveLeft = CCMoveBy::create(0.5, { 5, 0 });
+        CCAction* moveRight = CCMoveBy::create(0.5, { -5, 0 });
+
+        CCArray* actions = new CCArray();
+        actions->addObject(moveLeft);
+        actions->addObject(moveRight);
+
+        CCSequence* moveSeq = CCSequence::create(actions);
+
+        CCAction* moveLeft2 = CCMoveBy::create(0.5, { -5, 0 });
+        CCAction* moveRight2 = CCMoveBy::create(0.5, { 5, 0 });
+
+        CCArray* actions2 = new CCArray();
+        actions2->addObject(moveLeft2);
+        actions2->addObject(moveRight2);
+
+        CCSequence* moveSeq2 = CCSequence::create(actions2);
+
+
+        pointerLeft->runAction(CCRepeatForever::create(moveSeq));
+        pointerRight->runAction(CCRepeatForever::create(moveSeq2));
+
+
+        CCMenu* playerSelect = CCMenu::create();
+        playerSelect->setPosition(mainPlayer->getPosition());
+
+        gd::SimplePlayer* secondPlayer = gd::SimplePlayer::create(0);
+        secondPlayer->setTag(43221);
+        secondPlayer->setScale(1.6f);
+
+        playerSelect->addChild(pointerLeft);
+        playerSelect->addChild(pointerRight);
+
+        mainPlayer->setContentSize({ 40,40 });
+        secondPlayer->setContentSize({ 40,40 });
+
+
+        gd::CCMenuItemSpriteExtra* mainPlayerBtn = gd::CCMenuItemSpriteExtra::create(mainPlayer, self, menu_selector(ButtonStuff::setP1));
+        gd::CCMenuItemSpriteExtra* secondPlayerBtn = gd::CCMenuItemSpriteExtra::create(secondPlayer, self, menu_selector(ButtonStuff::setP2));
+        secondPlayerBtn->setPosition({ 40, 0 });
+
+        mainPlayerBtn->setPosition({ -40, 0 });
+
+        mainPlayerBtn->setTag(1);
+        secondPlayerBtn->setTag(2);
+
+
+
+
+        playerSelect->setTag(74356);
+
+        playerSelect->addChild(defaultToggler);
+        playerSelect->addChild(defaultToggleLabel);
+
+        playerSelect->addChild(mainPlayerBtn);
+        playerSelect->addChild(secondPlayerBtn);
+
+        mainPlayer->setAnchorPoint({ 0, 0 });
+        secondPlayer->setAnchorPoint({ 0, 0 });
+
+        CCMenu* menu = CCMenu::create();
+        menu->setTag(23423);
+
+
+        gd::CCMenuItemToggler* toggler = gd::CCMenuItemToggler::createWithStandardSprites(self, menu_selector(ButtonStuff::setGlowA), 0.7f);
+        toggler->setTag(67532);
+        toggler->setPosition(-165, -38);
+
+
+
+        CCLabelBMFont* glowP2Label = CCLabelBMFont::create("Glow P2", "bigFont.fnt");
+        glowP2Label->setPosition(-73.25, -37);
+        glowP2Label->setScale(0.5);
+        glowP2Label->setAnchorPoint({ 1, .5 });
+
+        menu->addChild(glowP2Label);
+        menu->addChild(toggler);
+        self->addChild(menu);
+
+        CCLabelBMFont* bothLabel = CCLabelBMFont::create("(Both Players)", "bigFont.fnt");
+        bothLabel->setPosition(menu->getPosition().x - 50, menu->getPosition().y - 68);
+        bothLabel->setScale(0.5);
+        bothLabel->setAnchorPoint({ 1, .5 });
+        bothLabel->setTag(63092);
+        bothLabel->setVisible(false);
+        //284 to 234
+        //160 to 92
+
+        self->addChild(bothLabel);
+
+
+        int ID = 0;
+
+        switch (lastPlayer)
+        {
+        case gd::kIconTypeCube:
+            ID = icon;
+            break;
+        case gd::kIconTypeShip:
+            ID = ship;
+            break;
+        case gd::kIconTypeBall:
+            ID = ball;
+            break;
+        case gd::kIconTypeUfo:
+            ID = UFO;
+            break;
+        case gd::kIconTypeWave:
+            ID = wave;
+            break;
+        case gd::kIconTypeRobot:
+            ID = robot;
+            break;
+        case gd::kIconTypeSpider:
+            ID = spider;
+            break;
+        case gd::kIconTypeDeathEffect:
+            ID = deathEffect;
+            break;
+        case gd::kIconTypeSpecial:
+            ID = trail;
+            break;
+        default:
+            break;
+        }
+
+        menu->setVisible(false);
+        secondPlayer->updatePlayerFrame(ID, lastPlayer);
+        self->addChild(playerSelect);
+
+        setIconColor(self, primaryColor, true, true);
+        setIconColor(self, secondaryColor, false, false);
+
+        setSelectorPosColors(self, true);
+        setSelectorPosColors(self, false);
+
+        defaultToggler->toggle(usesDefault);
     
-
-    CCLabelBMFont* defaultToggleLabel = CCLabelBMFont::create("Default P2", "bigFont.fnt");
-    defaultToggleLabel->setPosition(176, -44);
-    defaultToggleLabel->setScale(0.3);
-    defaultToggleLabel->setAnchorPoint({ 1, .5 });
-
-  
-
-    gd::SimplePlayer* mainPlayer = self->m_pPlayerPreview;
-
-    self->removeChild(mainPlayer);
-    
-    CCSprite* pointerLeft = CCSprite::createWithSpriteFrameName("navArrowBtn_001.png");
-    CCSprite* pointerRight = CCSprite::createWithSpriteFrameName("navArrowBtn_001.png");
-
-    pointerRight->setFlipX(true);
-    pointerLeft->setScale(0.4f);
-    pointerRight->setScale(0.4f);
-
-    pointerLeft->setTag(34729);
-    pointerRight->setTag(34730);
-
-    pointerLeft->setPosition({-90, 0});
-    pointerRight->setPosition({ 90, 0 });
-
-    pointerRight->setVisible(false);
-
-    CCAction* moveLeft = CCMoveBy::create(0.5, {5, 0});
-    CCAction* moveRight = CCMoveBy::create(0.5, {-5, 0});
-
-    CCArray* actions = new CCArray();
-    actions->addObject(moveLeft);
-    actions->addObject(moveRight);
-
-    CCSequence* moveSeq = CCSequence::create(actions);
-
-    CCAction* moveLeft2 = CCMoveBy::create(0.5, { -5, 0 });
-    CCAction* moveRight2 = CCMoveBy::create(0.5, { 5, 0 });
-
-    CCArray* actions2 = new CCArray();
-    actions2->addObject(moveLeft2);
-    actions2->addObject(moveRight2);
-
-    CCSequence* moveSeq2 = CCSequence::create(actions2);
-
-
-    pointerLeft->runAction(CCRepeatForever::create(moveSeq));
-    pointerRight->runAction(CCRepeatForever::create(moveSeq2));
-
-
-    CCMenu* playerSelect = CCMenu::create();
-    playerSelect->setPosition(mainPlayer->getPosition());
-
-    gd::SimplePlayer* secondPlayer = gd::SimplePlayer::create(0);
-    secondPlayer->setTag(43221);
-    secondPlayer->setScale(1.6f);
-
-    playerSelect->addChild(pointerLeft);
-    playerSelect->addChild(pointerRight);
-
-    mainPlayer->setContentSize({ 40,40 });
-    secondPlayer->setContentSize({ 40,40 });
-
-
-    gd::CCMenuItemSpriteExtra* mainPlayerBtn = gd::CCMenuItemSpriteExtra::create(mainPlayer, self, menu_selector(ButtonStuff::setP1));
-    gd::CCMenuItemSpriteExtra* secondPlayerBtn = gd::CCMenuItemSpriteExtra::create(secondPlayer, self, menu_selector(ButtonStuff::setP2));
-    secondPlayerBtn->setPosition({ 40, 0 });
-
-    mainPlayerBtn->setPosition({ -40, 0 });
-
-    mainPlayerBtn->setTag(1);
-    secondPlayerBtn->setTag(2);
-
-    
-    
-
-    playerSelect->setTag(74356);
-
-    playerSelect->addChild(defaultToggler);
-    playerSelect->addChild(defaultToggleLabel);
-
-    playerSelect->addChild(mainPlayerBtn);
-    playerSelect->addChild(secondPlayerBtn);
-
-    mainPlayer->setAnchorPoint({ 0, 0 });
-    secondPlayer->setAnchorPoint({ 0, 0 });
-
-    CCMenu* menu = CCMenu::create();
-    menu->setTag(23423);
-
-
-    gd::CCMenuItemToggler* toggler = gd::CCMenuItemToggler::createWithStandardSprites(self, menu_selector(ButtonStuff::setGlowA), 0.7f);
-    toggler->setTag(67532);
-    toggler->setPosition(-165, -38);
-
-   
-
-    CCLabelBMFont* glowP2Label = CCLabelBMFont::create("Glow P2", "bigFont.fnt");
-    glowP2Label->setPosition(-73.25, -37);
-    glowP2Label->setScale(0.5);
-    glowP2Label->setAnchorPoint({1, .5});
-
-    menu->addChild(glowP2Label);
-    menu->addChild(toggler);
-    self->addChild(menu);
-
-    CCLabelBMFont* bothLabel = CCLabelBMFont::create("(Both Players)", "bigFont.fnt");
-    bothLabel->setPosition(menu->getPosition().x - 50, menu->getPosition().y - 68);
-    bothLabel->setScale(0.5);
-    bothLabel->setAnchorPoint({ 1, .5 });
-    bothLabel->setTag(63092);
-    bothLabel->setVisible(false);
-    //284 to 234
-    //160 to 92
-
-    self->addChild(bothLabel);
-
-
-    int ID = 0;
-
-    switch (lastPlayer)
-    {
-    case gd::kIconTypeCube:
-        ID = icon;
-        break;
-    case gd::kIconTypeShip:
-        ID = ship;
-        break;
-    case gd::kIconTypeBall:
-        ID = ball;
-        break;
-    case gd::kIconTypeUfo:
-        ID = UFO;
-        break;
-    case gd::kIconTypeWave:
-        ID = wave;
-        break;
-    case gd::kIconTypeRobot:
-        ID = robot;
-        break;
-    case gd::kIconTypeSpider:
-        ID = spider;
-        break;
-    case gd::kIconTypeDeathEffect:
-        ID = deathEffect;
-        break;
-    case gd::kIconTypeSpecial:
-        ID = trail;
-        break;
-    default:
-        break;
-    }
-
-    menu->setVisible(false);
-    secondPlayer->updatePlayerFrame(ID, lastPlayer);
-    self->addChild(playerSelect);
-
-    setIconColor(self, primaryColor, true, true);
-    setIconColor(self, secondaryColor, false, false);
-
-    setSelectorPosColors(self, true);
-    setSelectorPosColors(self, false);
-
-    defaultToggler->toggle(usesDefault);
-    
-
     return true;
 }
 
@@ -1324,144 +1337,160 @@ DWORD WINAPI thread_func(void* hModule) {
     std::this_thread::sleep_for(std::chrono::milliseconds(random));
 
     auto base = reinterpret_cast<uintptr_t>(GetModuleHandle(0));
+
     MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x127f30),
-        GJGarageLayer_onPlayerIcon_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerIcon)
+        reinterpret_cast<void*>(base + 0x1907b0),
+        MenuLayer_init_H,
+        reinterpret_cast<void**>(&MenuLayer_init)
     );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1281e0),
-        GJGarageLayer_onPlayerShip_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerShip)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1282a0),
-        GJGarageLayer_onPlayerBall_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerBall)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x128360),
-        GJGarageLayer_onPlayerUFO_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerUFO)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x128420),
-        GJGarageLayer_onPlayerWave_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerWave)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1286d0),
-        GJGarageLayer_onPlayerRobot_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerRobot)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x128890),
-        GJGarageLayer_onPlayerSpider_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerSpider)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x128af0),
-        GJGarageLayer_onPlayerTrail_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerTrail)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x128a50),
-        GJGarageLayer_onPlayerDeathEffect_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPlayerDeathEffect)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x129470),
-        GJGarageLayer_onPrimaryColor_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onPrimaryColor)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x129590),
-        GJGarageLayer_onSecondaryColor_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onSecondaryColor)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x127c50),
-        GJGarageLayer_onTab_H,
-        reinterpret_cast<void**>(&GJGarageLayer_onTab)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1255d0),
-        GJGarageLayer_init_H,
-        reinterpret_cast<void**>(&GJGarageLayer_init)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1f81a0),
-        PlayerObject_updatePlayerBirdFrame_H,
-        reinterpret_cast<void**>(&PlayerObject_updatePlayerBirdFrame)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1f8580),
-        PlayerObject_updatePlayerDartFrame_H,
-        reinterpret_cast<void**>(&PlayerObject_updatePlayerDartFrame)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1f7e40),
-        PlayerObject_updatePlayerFrame_H,
-        reinterpret_cast<void**>(&PlayerObject_updatePlayerFrame)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1f83a0),
-        PlayerObject_updatePlayerRollFrame_H,
-        reinterpret_cast<void**>(&PlayerObject_updatePlayerRollFrame)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1f7ff0),
-        PlayerObject_updatePlayerShipFrame_H,
-        reinterpret_cast<void**>(&PlayerObject_updatePlayerShipFrame)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1f6f70),
-        PlayerObject_switchedToMode_H,
-        reinterpret_cast<void**>(&PlayerObject_switchedToMode)
-    ); 
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x146700),
-        GJRobotSprite_updateFrame_H,
-        reinterpret_cast<void**>(&GJRobotSprite_updateFrame)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1e7e90),
-        PlayerObject_setupStreak_H,
-        reinterpret_cast<void**>(&PlayerObject_setupStreak)
-    );
-    /*MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1efaa0),
-        PlayerObject_playerDestroyed_H,
-        reinterpret_cast<void**>(&PlayerObject_playerDestroyed)
-    );*/
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x1fb780),
-        PlayLayer_init_H,
-        reinterpret_cast<void**>(&PlayLayer_init)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x12af70),
-        GaragePage_init_H,
-        reinterpret_cast<void**>(&GaragePage_init)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x29c50),
-        ListButtonBar_switchedPage_H,
-        reinterpret_cast<void**>(&ListButtonBar_switchedPage)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x12aad0),
-        GJGarageLayer_showCircleWave_H,
-        reinterpret_cast<void**>(&GJGarageLayer_showCircleWave)
-    );
-    MH_CreateHook(
-        reinterpret_cast<void*>(base + 0x12a9d0),
-        GJGarageLayer_showBlackCircleWave_H,
-        reinterpret_cast<void**>(&GJGarageLayer_showBlackCircleWave)
-    );
+   
+    if (!GetModuleHandle("SaiModPack.dll")) {
+
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1255d0),
+            GJGarageLayer_init_H,
+            reinterpret_cast<void**>(&GJGarageLayer_init)
+        );
+
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x127f30),
+            GJGarageLayer_onPlayerIcon_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerIcon)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1281e0),
+            GJGarageLayer_onPlayerShip_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerShip)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1282a0),
+            GJGarageLayer_onPlayerBall_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerBall)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x128360),
+            GJGarageLayer_onPlayerUFO_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerUFO)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x128420),
+            GJGarageLayer_onPlayerWave_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerWave)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1286d0),
+            GJGarageLayer_onPlayerRobot_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerRobot)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x128890),
+            GJGarageLayer_onPlayerSpider_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerSpider)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x128af0),
+            GJGarageLayer_onPlayerTrail_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerTrail)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x128a50),
+            GJGarageLayer_onPlayerDeathEffect_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPlayerDeathEffect)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x129470),
+            GJGarageLayer_onPrimaryColor_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onPrimaryColor)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x129590),
+            GJGarageLayer_onSecondaryColor_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onSecondaryColor)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x127c50),
+            GJGarageLayer_onTab_H,
+            reinterpret_cast<void**>(&GJGarageLayer_onTab)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1f81a0),
+            PlayerObject_updatePlayerBirdFrame_H,
+            reinterpret_cast<void**>(&PlayerObject_updatePlayerBirdFrame)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1f8580),
+            PlayerObject_updatePlayerDartFrame_H,
+            reinterpret_cast<void**>(&PlayerObject_updatePlayerDartFrame)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1f7e40),
+            PlayerObject_updatePlayerFrame_H,
+            reinterpret_cast<void**>(&PlayerObject_updatePlayerFrame)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1f83a0),
+            PlayerObject_updatePlayerRollFrame_H,
+            reinterpret_cast<void**>(&PlayerObject_updatePlayerRollFrame)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1f7ff0),
+            PlayerObject_updatePlayerShipFrame_H,
+            reinterpret_cast<void**>(&PlayerObject_updatePlayerShipFrame)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1f6f70),
+            PlayerObject_switchedToMode_H,
+            reinterpret_cast<void**>(&PlayerObject_switchedToMode)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x146700),
+            GJRobotSprite_updateFrame_H,
+            reinterpret_cast<void**>(&GJRobotSprite_updateFrame)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1e7e90),
+            PlayerObject_setupStreak_H,
+            reinterpret_cast<void**>(&PlayerObject_setupStreak)
+        );
+        /*MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1efaa0),
+            PlayerObject_playerDestroyed_H,
+            reinterpret_cast<void**>(&PlayerObject_playerDestroyed)
+        );*/
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x1fb780),
+            PlayLayer_init_H,
+            reinterpret_cast<void**>(&PlayLayer_init)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x12af70),
+            GaragePage_init_H,
+            reinterpret_cast<void**>(&GaragePage_init)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x29c50),
+            ListButtonBar_switchedPage_H,
+            reinterpret_cast<void**>(&ListButtonBar_switchedPage)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x12aad0),
+            GJGarageLayer_showCircleWave_H,
+            reinterpret_cast<void**>(&GJGarageLayer_showCircleWave)
+        );
+        MH_CreateHook(
+            reinterpret_cast<void*>(base + 0x12a9d0),
+            GJGarageLayer_showBlackCircleWave_H,
+            reinterpret_cast<void**>(&GJGarageLayer_showBlackCircleWave)
+        );
+        loadIcons();
+    }
+    else {
+
+        hasSai = true;
+
+    }
+
     MH_EnableHook(MH_ALL_HOOKS);
-    
-    loadIcons();
 
     return 0;
 }
