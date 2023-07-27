@@ -282,8 +282,6 @@ void setSelectorPosIcons(gd::GaragePage* page, bool isP2) {
     CCSprite* originalSelector = getOriginalSelector(page);
     originalSelector->setOpacity(0);
 
-
-
     gd::GameManager* manager = gd::GameManager::sharedState();
 
     CCSprite* selector = nullptr;
