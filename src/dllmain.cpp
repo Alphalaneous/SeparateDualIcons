@@ -455,8 +455,6 @@ void __fastcall ListButtonBar_switchedPage_H(gd::ListButtonBar* self, void*, int
     }
     else if(parent->getChildByTag(74356)) {
 
-        CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(parent, 30, 40, 0);
-        CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(parent, 30, 40, 1);
         gd::GJGarageLayer* garageLayer = reinterpret_cast<gd::GJGarageLayer*>(parent);
 
         setSelectorPosColors(garageLayer, true);
