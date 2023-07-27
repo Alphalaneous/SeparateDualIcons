@@ -111,60 +111,55 @@ void saveIcons();
 void setGlow(gd::GJGarageLayer* garage);
 void setFrame(gd::PlayerObject* playerObject, gd::IconType iconType);
 void setColor(gd::PlayerObject* playerObject);
+void setIconColor(gd::GJGarageLayer* self, int ID, bool primary, bool isP2);
 bool isSecondPlayerInPlay(gd::PlayerObject* playerObject);
 
 class ButtonStuff {
 public:
     void ButtonStuff::setGlowA(CCObject* target) {
-        
+
         CCScene* scene = CCDirector::sharedDirector()->getRunningScene();
-        
         gd::GJGarageLayer* garage = reinterpret_cast<gd::GJGarageLayer*>(scene->getChildren()->objectAtIndex(0));
-
         CCMenu* menu = reinterpret_cast<CCMenu*>(garage->getChildByTag(23423));
-
         gd::CCMenuItemToggler* toggler = reinterpret_cast<gd::CCMenuItemToggler*>(menu->getChildByTag(67532));
 
         hasGlow = !toggler->isOn();
-
         setGlow(garage);
     }
 
     void ButtonStuff::setP2(CCObject* target) {
 
         CCScene* scene = CCDirector::sharedDirector()->getRunningScene();
-
         gd::GJGarageLayer* garage = reinterpret_cast<gd::GJGarageLayer*>(scene->getChildren()->objectAtIndex(0));
-
         CCMenu* playerMenu = reinterpret_cast<CCMenu*>(garage->getChildByTag(74356));
         CCSprite* rightArrow = reinterpret_cast<CCSprite*>(playerMenu->getChildByTag(34730));
         CCSprite* leftArrow = reinterpret_cast<CCSprite*>(playerMenu->getChildByTag(34729));
+
         rightArrow->setVisible(true);
         leftArrow->setVisible(false);
 
         is2ndPlayer = true;
     }
+
     void ButtonStuff::setP1(CCObject* target) {
 
         CCScene* scene = CCDirector::sharedDirector()->getRunningScene();
-
         gd::GJGarageLayer* garage = reinterpret_cast<gd::GJGarageLayer*>(scene->getChildren()->objectAtIndex(0));
-
         CCMenu* playerMenu = reinterpret_cast<CCMenu*>(garage->getChildByTag(74356));
         CCSprite* rightArrow = reinterpret_cast<CCSprite*>(playerMenu->getChildByTag(34730));
         CCSprite* leftArrow = reinterpret_cast<CCSprite*>(playerMenu->getChildByTag(34729));
+
         rightArrow->setVisible(false);
         leftArrow->setVisible(true);
 
         is2ndPlayer = false;
     }
+
     void ButtonStuff::setDefaultP2(CCObject* target) {
+
         CCScene* scene = CCDirector::sharedDirector()->getRunningScene();
-
         gd::GJGarageLayer* garage = reinterpret_cast<gd::GJGarageLayer*>(scene->getChildren()->objectAtIndex(0));
-
         CCMenu* menu = reinterpret_cast<CCMenu*>(garage->getChildByTag(74356));
-
         gd::CCMenuItemToggler* toggler = reinterpret_cast<gd::CCMenuItemToggler*>(menu->getChildByTag(14736));
 
         usesDefault = !toggler->isOn();
@@ -175,9 +170,6 @@ public:
     }
 };
 
-void setIconColor(gd::GJGarageLayer* self, int ID, bool primary, bool isP2);
-
-
 void setSelectorPosColors(gd::GJGarageLayer* page, bool isP2) {
 
     int ID = 0;
@@ -185,7 +177,6 @@ void setSelectorPosColors(gd::GJGarageLayer* page, bool isP2) {
     int tag = 0;
 
     gd::GameManager* manager = gd::GameManager::sharedState();
-
 
     CCSprite* selector1p1 = reinterpret_cast<CCSprite*>(page->getChildByTag(16547));
     CCSprite* selector2p1 = reinterpret_cast<CCSprite*>(page->getChildByTag(16548));
@@ -218,54 +209,50 @@ void setSelectorPosColors(gd::GJGarageLayer* page, bool isP2) {
             if (c == 1) ID = secondaryColor;
 
             gd::ListButtonBar* listButtonBar = reinterpret_cast<gd::ListButtonBar*>(page->getChildByTag(1));
+            gd::BoomScrollLayer* boomScrollLayer = reinterpret_cast<gd::BoomScrollLayer*>(listButtonBar->getChildren()->objectAtIndex(0));
+            CCLayer* extendedLayer = getFromObjectIndex<CCLayer*, CCLayer*>(boomScrollLayer, 0);
 
-            if (listButtonBar) {
+            int posInPage = 0;
+            int pageNum = 0;
+            for (int i = 0; i < extendedLayer->getChildrenCount(); i++) {
 
-                gd::BoomScrollLayer* boomScrollLayer = reinterpret_cast<gd::BoomScrollLayer*>(listButtonBar->getChildren()->objectAtIndex(0));
-                CCLayer* extendedLayer = getFromObjectIndex<CCLayer*, CCLayer*>(boomScrollLayer, 0);
+                CCLayer* pageLayer = reinterpret_cast<CCLayer*>(extendedLayer->getChildren()->objectAtIndex(i));
+                CCMenu* menu = reinterpret_cast<CCMenu*>(pageLayer->getChildren()->objectAtIndex(0));
 
-                int posInPage = 0;
-                int pageNum = 0;
-                for (int i = 0; i < extendedLayer->getChildrenCount(); i++) {
-
-                    CCLayer* pageLayer = reinterpret_cast<CCLayer*>(extendedLayer->getChildren()->objectAtIndex(i));
-                    CCMenu* menu = reinterpret_cast<CCMenu*>(pageLayer->getChildren()->objectAtIndex(0));
-
-                    for (int j = 0; j < menu->getChildrenCount() / 2; j++) {
-                        if (menu->getChildren()->objectAtIndex(j)->getTag() == ID) {
-                            posInPage = j;
-                            pageNum = i;
-                            goto to_break;
-                        }
+                for (int j = 0; j < menu->getChildrenCount() / 2; j++) {
+                    if (menu->getChildren()->objectAtIndex(j)->getTag() == ID) {
+                        posInPage = j;
+                        pageNum = i;
+                        goto to_break;
                     }
                 }
-                to_break:
+            }
+            to_break:
 
-                int xExtened = extendedLayer->getPositionX();
-                CCLayer* pageLayer = reinterpret_cast<CCLayer*>(extendedLayer->getChildren()->objectAtIndex(pageNum));
+            int xExtened = extendedLayer->getPositionX();
+            CCLayer* pageLayer = reinterpret_cast<CCLayer*>(extendedLayer->getChildren()->objectAtIndex(pageNum));
 
-                if (pageLayer->getPositionX() * -1 == xExtened) {
+            if (pageLayer->getPositionX() * -1 == xExtened) {
 
-                    auto winSize = CCDirector::sharedDirector()->getWinSize();
+                auto winSize = CCDirector::sharedDirector()->getWinSize();
 
-                    float centerX = winSize.width / 2;
+                float centerX = winSize.width / 2;
 
-                    if (c == 0) {
-                        selector1p2->setVisible(true);
-                        selector1p2->setPosition({ centerX - 159.8f + 29.035f * (posInPage), 55.4f });
-                    }
-                    if (c == 1) {
-                        selector2p2->setVisible(true);
-                        selector2p2->setPosition({ centerX - 159.8f + 29.035f * (posInPage), 26.4f });
-                    }
+                if (c == 0) {
+                    selector1p2->setVisible(true);
+                    selector1p2->setPosition({ centerX - 159.8f + 29.035f * (posInPage), 55.4f });
                 }
                 else {
-                    if (c == 0) {
-                        selector1p2->setVisible(false);
-                    }
-                    if (c == 1) {
-                        selector2p2->setVisible(false);
-                    }
+                    selector2p2->setVisible(true);
+                    selector2p2->setPosition({ centerX - 159.8f + 29.035f * (posInPage), 26.4f });
+                }
+            }
+            else {
+                if (c == 0) {
+                    selector1p2->setVisible(false);
+                }
+                else {
+                    selector2p2->setVisible(false);
                 }
             }
         }
@@ -381,44 +368,40 @@ void setSelectorPosIcons(gd::GaragePage* page, bool isP2) {
     if (hasSecondSelect || !isP2) {
 
         gd::ListButtonBar* listButtonBar = reinterpret_cast<gd::ListButtonBar*>(page->getChildByTag(tag));
+        gd::BoomScrollLayer* boomScrollLayer = reinterpret_cast<gd::BoomScrollLayer*>(listButtonBar->getChildren()->objectAtIndex(0));
+        CCLayer* extendedLayer = reinterpret_cast<CCLayer*>(boomScrollLayer->getChildren()->objectAtIndex(0));
 
-        if (listButtonBar) {
-
-            gd::BoomScrollLayer* boomScrollLayer = reinterpret_cast<gd::BoomScrollLayer*>(listButtonBar->getChildren()->objectAtIndex(0));
-            CCLayer* extendedLayer = reinterpret_cast<CCLayer*>(boomScrollLayer->getChildren()->objectAtIndex(0));
-
-
-            int pageNum = 0;
-            for (int i = 0; i < extendedLayer->getChildrenCount(); i++) {
-                if (ID <= ((pageNum + 1) * 36)) {
-                    break;
-                }
-                pageNum++;
+        int pageNum = 0;
+        for (int i = 0; i < extendedLayer->getChildrenCount(); i++) {
+            if (ID <= ((pageNum + 1) * 36)) {
+                break;
             }
-
-            int xExtened = extendedLayer->getPositionX();
-
-            CCLayer* pageLayer = reinterpret_cast<CCLayer*>(extendedLayer->getChildren()->objectAtIndex(pageNum));
-
-            if(pageLayer->getPositionX() * -1 == xExtened){
-                selector->setVisible(true);
-
-                int IDtoPageValue = ID - pageNum * 36;
-
-                int xPos = ((IDtoPageValue - 1) % 12) + 1;
-                int yPos = ((IDtoPageValue - 1) / 12) + 1;
-
-                auto winSize = CCDirector::sharedDirector()->getWinSize();
-
-                float centerX = winSize.width / 2;
-                float centerY = winSize.height / 2;
-
-                selector->setPosition({ centerX - 165 + 30 * (xPos - 1), centerY - 6 - 30 * (yPos - 1) });
-            }
-            else {
-                selector->setVisible(false);
-            }
+            pageNum++;
         }
+
+        int xExtened = extendedLayer->getPositionX();
+
+        CCLayer* pageLayer = reinterpret_cast<CCLayer*>(extendedLayer->getChildren()->objectAtIndex(pageNum));
+
+        if(pageLayer->getPositionX() * -1 == xExtened){
+            selector->setVisible(true);
+
+            int IDtoPageValue = ID - pageNum * 36;
+
+            int xPos = ((IDtoPageValue - 1) % 12) + 1;
+            int yPos = ((IDtoPageValue - 1) / 12) + 1;
+
+            auto winSize = CCDirector::sharedDirector()->getWinSize();
+
+            float centerX = winSize.width / 2;
+            float centerY = winSize.height / 2;
+
+            selector->setPosition({ centerX - 165 + 30 * (xPos - 1), centerY - 6 - 30 * (yPos - 1) });
+        }
+        else {
+            selector->setVisible(false);
+        }
+        
     }
     else {
         selector->setVisible(false);
@@ -455,17 +438,13 @@ bool __fastcall GaragePage_init_H(gd::GaragePage* self, void*, gd::IconType type
     playerOneSelect->addChild(p1Label);
     playerTwoSelect->addChild(p2Label);
 
-
     self->addChild(playerTwoSelect);
     self->addChild(playerOneSelect);
 
     if (!GaragePage_init(self, type, pGarage, pSelectCallback)) return false;
 
-    
-
     setSelectorPosIcons(self, true);
     setSelectorPosIcons(self, false);
-
 
     return true;
 }
@@ -473,17 +452,13 @@ bool __fastcall GaragePage_init_H(gd::GaragePage* self, void*, gd::IconType type
 void(__thiscall* GJGarageLayer_showBlackCircleWave)(gd::GJGarageLayer*);
 
 void __fastcall GJGarageLayer_showBlackCircleWave_H(gd::GJGarageLayer* self, void*) {
-
-    //GJGarageLayer_showCircleWave(self);
-
+    //do nothing
 }
 
 void(__thiscall* GJGarageLayer_showCircleWave)(gd::GJGarageLayer*);
 
 void __fastcall GJGarageLayer_showCircleWave_H(gd::GJGarageLayer* self, void*) {
-
-    //GJGarageLayer_showCircleWave(self);
-
+    //do nothing
 }
 
 void(__thiscall* ListButtonBar_switchedPage)(gd::ListButtonBar*, int);
@@ -509,9 +484,6 @@ void __fastcall ListButtonBar_switchedPage_H(gd::ListButtonBar* self, void*, int
 
         setSelectorPosColors(garageLayer, true);
         setSelectorPosColors(garageLayer, false);
-
-        //selectSpriteP1primary->setVisible(false);
-        //selectSpriteP1secondary->setVisible(false);
     }
 }
 
@@ -521,15 +493,12 @@ bool __fastcall MenuLayer_init_H(gd::MenuLayer* self, void*) {
 
     if (!MenuLayer_init(self)) return false;
 
-
     if(hasSai){
         float delay = 1.0f;
         self->scheduleOnce(schedule_selector(ButtonStuff::showSaiAlert), delay);
-        
     }
 
     return true;
-
 }
 
 bool(__thiscall* GJGarageLayer_init)(gd::GJGarageLayer* self);
@@ -537,7 +506,6 @@ bool(__thiscall* GJGarageLayer_init)(gd::GJGarageLayer* self);
 bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
 
     if (!GJGarageLayer_init(self)) return false;
-
 
         is2ndPlayer = false;
         CCSprite* unlockTxt = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(self, 90, 120, 0);
@@ -607,14 +575,10 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
         defaultToggler->setPosition(106, -44);
         defaultToggler->setScale(0.675f);;
 
-
-
         CCLabelBMFont* defaultToggleLabel = CCLabelBMFont::create("Default P2", "bigFont.fnt");
         defaultToggleLabel->setPosition(176, -44);
         defaultToggleLabel->setScale(0.3);
         defaultToggleLabel->setAnchorPoint({ 1, .5 });
-
-
 
         gd::SimplePlayer* mainPlayer = self->m_pPlayerPreview;
 
@@ -653,10 +617,8 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
 
         CCSequence* moveSeq2 = CCSequence::create(actions2);
 
-
         pointerLeft->runAction(CCRepeatForever::create(moveSeq));
         pointerRight->runAction(CCRepeatForever::create(moveSeq2));
-
 
         CCMenu* playerSelect = CCMenu::create();
         playerSelect->setPosition(mainPlayer->getPosition());
@@ -671,7 +633,6 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
         mainPlayer->setContentSize({ 40,40 });
         secondPlayer->setContentSize({ 40,40 });
 
-
         gd::CCMenuItemSpriteExtra* mainPlayerBtn = gd::CCMenuItemSpriteExtra::create(mainPlayer, self, menu_selector(ButtonStuff::setP1));
         gd::CCMenuItemSpriteExtra* secondPlayerBtn = gd::CCMenuItemSpriteExtra::create(secondPlayer, self, menu_selector(ButtonStuff::setP2));
         secondPlayerBtn->setPosition({ 40, 0 });
@@ -680,9 +641,6 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
 
         mainPlayerBtn->setTag(1);
         secondPlayerBtn->setTag(2);
-
-
-
 
         playerSelect->setTag(74356);
 
@@ -698,12 +656,9 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
         CCMenu* menu = CCMenu::create();
         menu->setTag(23423);
 
-
         gd::CCMenuItemToggler* toggler = gd::CCMenuItemToggler::createWithStandardSprites(self, menu_selector(ButtonStuff::setGlowA), 0.7f);
         toggler->setTag(67532);
         toggler->setPosition(-165, -38);
-
-
 
         CCLabelBMFont* glowP2Label = CCLabelBMFont::create("Glow P2", "bigFont.fnt");
         glowP2Label->setPosition(-73.25, -37);
@@ -720,11 +675,8 @@ bool __fastcall GJGarageLayer_init_H(gd::GJGarageLayer* self, void*) {
         bothLabel->setAnchorPoint({ 1, .5 });
         bothLabel->setTag(63092);
         bothLabel->setVisible(false);
-        //284 to 234
-        //160 to 92
 
         self->addChild(bothLabel);
-
 
         int ID = 0;
 
@@ -783,7 +735,6 @@ void setIcon(gd::GJGarageLayer* self, gd::IconType type, int ID, bool changeIcon
         if (playerMenu->getChildByTag(2)) {
 
             if (isP2) {
-
                 gd::CCMenuItemSpriteExtra* button = reinterpret_cast<gd::CCMenuItemSpriteExtra*>(playerMenu->getChildByTag(2));
                 gd::SimplePlayer* simplePlayer = reinterpret_cast<gd::SimplePlayer*>(button->getChildren()->objectAtIndex(0));
 
@@ -853,7 +804,6 @@ void setIconColor(gd::GJGarageLayer* self, int ID, bool primary, bool isP2) {
 
             simplePlayer->setGlowOutline(hasGlow);
             simplePlayer->updateColors();
-
 
             setSelectorPosColors(self, isP2);
 
@@ -995,12 +945,6 @@ void(__thiscall* GJGarageLayer_onPlayerDeathEffect)(gd::GJGarageLayer* self, CCO
 
 void __fastcall GJGarageLayer_onPlayerDeathEffect_H(gd::GJGarageLayer* self, void*, CCObject* param_1) {
 
-    /*if (is2ndPlayer) {
-        deathEffect = param_1->getTag();
-        setIcon(self, gd::IconType::kIconTypeDeathEffect, deathEffect, false);
-
-    }
-    else */
     GJGarageLayer_onPlayerDeathEffect(self, param_1);
     setIcon(self, gd::IconType::kIconTypeDeathEffect, deathEffect, false, false);
 }
@@ -1115,27 +1059,6 @@ void __fastcall PlayerObject_setupStreak_H(gd::PlayerObject* self, void*) {
     }
 }
 
-/*void(__thiscall* PlayerObject_playerDestroyed)(gd::PlayerObject*, char);
-
-void __fastcall PlayerObject_playerDestroyed_H(gd::PlayerObject* self, void*, char param_1) {
-
-    int origDeathEffect = gd::GameManager::sharedState()->getPlayerDeathEffect();
-    
-    std::cout << origDeathEffect << std::endl;
-    std::cout << deathEffect << std::endl;
-
-    if (isSecondPlayerInPlay(self)) {
-        
-        gd::GameManager::sharedState()->setPlayerDeathEffect(deathEffect);
-    }
-
-    std::cout << "Death" << std::endl;
-
-    PlayerObject_playerDestroyed(self, param_1);
-
-    gd::GameManager::sharedState()->setPlayerDeathEffect(origDeathEffect);
-}*/
-
 bool(__thiscall* PlayLayer_init)(gd::PlayLayer* self, gd::GJGameLevel* level);
 
 bool __fastcall PlayLayer_init_H(gd::PlayLayer* self, void*, gd::GJGameLevel* level) {
@@ -1149,12 +1072,8 @@ void(__thiscall* GJRobotSprite_updateFrame)(gd::GJRobotSprite*, int);
 
 void __fastcall GJRobotSprite_updateFrame_H(gd::GJRobotSprite* self, void*, int iconID) {
 
-    if (!usesDefault) {
-        if (gd::PlayLayer::get()) {
-            if (gd::PlayLayer::get()->m_pPlayer2) {
-                setColor(gd::PlayLayer::get()->m_pPlayer2);
-            }
-        }
+    if (!usesDefault && gd::PlayLayer::get() && gd::PlayLayer::get()->m_pPlayer2) {
+        setColor(gd::PlayLayer::get()->m_pPlayer2);
     }
     
     GJRobotSprite_updateFrame(self, iconID);
@@ -1165,28 +1084,24 @@ void(__thiscall* PlayerObject_switchedToMode)(gd::PlayerObject*, int);
 void __fastcall PlayerObject_switchedToMode_H(gd::PlayerObject* self, void*, int param_1) {
 
     PlayerObject_switchedToMode(self, param_1);
-    if (!usesDefault) {
-        if (isSecondPlayerInPlay(self)) {
-            if (param_1 == 0x1b) {
-                gd::PlayLayer::get()->m_pPlayer2->m_pRobot->updateFrame(robot);
-                setColor(self);
-            }
-            if (param_1 == 0x21) {
-                gd::PlayLayer::get()->m_pPlayer2->m_pSpider->updateFrame(spider);
-                setColor(self);
-            }
+    if (!usesDefault && isSecondPlayerInPlay(self)) {
+        if (param_1 == 0x1b) {
+            gd::PlayLayer::get()->m_pPlayer2->m_pRobot->updateFrame(robot);
+            setColor(self);
+        }
+        if (param_1 == 0x21) {
+            gd::PlayLayer::get()->m_pPlayer2->m_pSpider->updateFrame(spider);
+            setColor(self);
         }
     }
 }
 
 bool isSecondPlayerInPlay(gd::PlayerObject* playerObject) {
-    if (playerObject) {
-        if (gd::PlayLayer::get()) {
-            if (gd::PlayLayer::get()->m_pPlayer2) {
-                return playerObject == gd::PlayLayer::get()->m_pPlayer2;
-            }
-        }
+
+    if (playerObject && gd::PlayLayer::get() && gd::PlayLayer::get()->m_pPlayer2) {
+       return playerObject == gd::PlayLayer::get()->m_pPlayer2; 
     }
+
     return false;
 }
 
@@ -1237,7 +1152,6 @@ void setFrame(gd::PlayerObject* playerObject, gd::IconType iconType) {
         }
     }
 }
-
 
 void setGlowToggler(bool enabled, gd::GJGarageLayer* garage) {
 
@@ -1311,6 +1225,7 @@ void loadIcons() {
     configFile.close();
 }
 void saveIcons() {
+
     std::ofstream configFile("p2IconData", std::ios::out | std::ios::trunc);
     configFile << std::to_string(icon) << ",";
     configFile << std::to_string(ship) << ",";
@@ -1363,154 +1278,148 @@ DWORD WINAPI thread_func(void* hModule) {
         MenuLayer_init_H,
         reinterpret_cast<void**>(&MenuLayer_init)
     );
-   
-    if (!GetModuleHandle("SaiModPack.dll")) {
+    
+    MH_EnableHook(&MenuLayer_init);
 
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1255d0),
-            GJGarageLayer_init_H,
-            reinterpret_cast<void**>(&GJGarageLayer_init)
-        );
-
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x127f30),
-            GJGarageLayer_onPlayerIcon_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerIcon)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1281e0),
-            GJGarageLayer_onPlayerShip_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerShip)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1282a0),
-            GJGarageLayer_onPlayerBall_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerBall)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x128360),
-            GJGarageLayer_onPlayerUFO_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerUFO)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x128420),
-            GJGarageLayer_onPlayerWave_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerWave)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1286d0),
-            GJGarageLayer_onPlayerRobot_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerRobot)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x128890),
-            GJGarageLayer_onPlayerSpider_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerSpider)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x128af0),
-            GJGarageLayer_onPlayerTrail_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerTrail)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x128a50),
-            GJGarageLayer_onPlayerDeathEffect_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPlayerDeathEffect)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x129470),
-            GJGarageLayer_onPrimaryColor_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onPrimaryColor)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x129590),
-            GJGarageLayer_onSecondaryColor_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onSecondaryColor)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x127c50),
-            GJGarageLayer_onTab_H,
-            reinterpret_cast<void**>(&GJGarageLayer_onTab)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1f81a0),
-            PlayerObject_updatePlayerBirdFrame_H,
-            reinterpret_cast<void**>(&PlayerObject_updatePlayerBirdFrame)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1f8580),
-            PlayerObject_updatePlayerDartFrame_H,
-            reinterpret_cast<void**>(&PlayerObject_updatePlayerDartFrame)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1f7e40),
-            PlayerObject_updatePlayerFrame_H,
-            reinterpret_cast<void**>(&PlayerObject_updatePlayerFrame)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1f83a0),
-            PlayerObject_updatePlayerRollFrame_H,
-            reinterpret_cast<void**>(&PlayerObject_updatePlayerRollFrame)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1f7ff0),
-            PlayerObject_updatePlayerShipFrame_H,
-            reinterpret_cast<void**>(&PlayerObject_updatePlayerShipFrame)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1f6f70),
-            PlayerObject_switchedToMode_H,
-            reinterpret_cast<void**>(&PlayerObject_switchedToMode)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x146700),
-            GJRobotSprite_updateFrame_H,
-            reinterpret_cast<void**>(&GJRobotSprite_updateFrame)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1e7e90),
-            PlayerObject_setupStreak_H,
-            reinterpret_cast<void**>(&PlayerObject_setupStreak)
-        );
-        /*MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1efaa0),
-            PlayerObject_playerDestroyed_H,
-            reinterpret_cast<void**>(&PlayerObject_playerDestroyed)
-        );*/
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x1fb780),
-            PlayLayer_init_H,
-            reinterpret_cast<void**>(&PlayLayer_init)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x12af70),
-            GaragePage_init_H,
-            reinterpret_cast<void**>(&GaragePage_init)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x29c50),
-            ListButtonBar_switchedPage_H,
-            reinterpret_cast<void**>(&ListButtonBar_switchedPage)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x12aad0),
-            GJGarageLayer_showCircleWave_H,
-            reinterpret_cast<void**>(&GJGarageLayer_showCircleWave)
-        );
-        MH_CreateHook(
-            reinterpret_cast<void*>(base + 0x12a9d0),
-            GJGarageLayer_showBlackCircleWave_H,
-            reinterpret_cast<void**>(&GJGarageLayer_showBlackCircleWave)
-        );
-        loadIcons();
-    }
-    else {
-
+    if (GetModuleHandle("SaiModPack.dll")) {
         hasSai = true;
-
+        return 0;
     }
+
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1255d0),
+        GJGarageLayer_init_H,
+        reinterpret_cast<void**>(&GJGarageLayer_init)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x127f30),
+        GJGarageLayer_onPlayerIcon_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerIcon)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1281e0),
+        GJGarageLayer_onPlayerShip_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerShip)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1282a0),
+        GJGarageLayer_onPlayerBall_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerBall)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x128360),
+        GJGarageLayer_onPlayerUFO_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerUFO)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x128420),
+        GJGarageLayer_onPlayerWave_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerWave)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1286d0),
+        GJGarageLayer_onPlayerRobot_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerRobot)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x128890),
+        GJGarageLayer_onPlayerSpider_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerSpider)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x128af0),
+        GJGarageLayer_onPlayerTrail_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerTrail)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x128a50),
+        GJGarageLayer_onPlayerDeathEffect_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPlayerDeathEffect)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x129470),
+        GJGarageLayer_onPrimaryColor_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onPrimaryColor)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x129590),
+        GJGarageLayer_onSecondaryColor_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onSecondaryColor)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x127c50),
+        GJGarageLayer_onTab_H,
+        reinterpret_cast<void**>(&GJGarageLayer_onTab)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1f81a0),
+        PlayerObject_updatePlayerBirdFrame_H,
+        reinterpret_cast<void**>(&PlayerObject_updatePlayerBirdFrame)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1f8580),
+        PlayerObject_updatePlayerDartFrame_H,
+        reinterpret_cast<void**>(&PlayerObject_updatePlayerDartFrame)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1f7e40),
+        PlayerObject_updatePlayerFrame_H,
+        reinterpret_cast<void**>(&PlayerObject_updatePlayerFrame)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1f83a0),
+        PlayerObject_updatePlayerRollFrame_H,
+        reinterpret_cast<void**>(&PlayerObject_updatePlayerRollFrame)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1f7ff0),
+        PlayerObject_updatePlayerShipFrame_H,
+        reinterpret_cast<void**>(&PlayerObject_updatePlayerShipFrame)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1f6f70),
+        PlayerObject_switchedToMode_H,
+        reinterpret_cast<void**>(&PlayerObject_switchedToMode)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x146700),
+        GJRobotSprite_updateFrame_H,
+        reinterpret_cast<void**>(&GJRobotSprite_updateFrame)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1e7e90),
+        PlayerObject_setupStreak_H,
+        reinterpret_cast<void**>(&PlayerObject_setupStreak)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x1fb780),
+        PlayLayer_init_H,
+        reinterpret_cast<void**>(&PlayLayer_init)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x12af70),
+        GaragePage_init_H,
+        reinterpret_cast<void**>(&GaragePage_init)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x29c50),
+        ListButtonBar_switchedPage_H,
+        reinterpret_cast<void**>(&ListButtonBar_switchedPage)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x12aad0),
+        GJGarageLayer_showCircleWave_H,
+        reinterpret_cast<void**>(&GJGarageLayer_showCircleWave)
+    );
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x12a9d0),
+        GJGarageLayer_showBlackCircleWave_H,
+        reinterpret_cast<void**>(&GJGarageLayer_showBlackCircleWave)
+    );
 
     MH_EnableHook(MH_ALL_HOOKS);
+
+    loadIcons();
 
     return 0;
 }
@@ -1518,9 +1427,7 @@ DWORD WINAPI thread_func(void* hModule) {
 BOOL APIENTRY DllMain(HMODULE handle, DWORD reason, LPVOID reserved) {
     if (reason == DLL_PROCESS_ATTACH) {
         CreateThread(0, 0x100, thread_func, handle, 0, 0);
-        
     }
-
 
     return TRUE;
 }
