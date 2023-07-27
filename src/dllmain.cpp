@@ -52,29 +52,6 @@ T getFromObjectContentSizeWidthBetween(CCObject* obj, float widthS, float widthE
     return nullptr;
 }
 
-
-template<typename O, typename T>
-T getFromObjectContentSizeWidth(CCObject* obj, float width, int index) {
-    CCObject* pObj = nullptr;
-
-    int idx = 0;
-
-    CCARRAY_FOREACH(dynamic_cast<O>(obj)->getChildren(), pObj) {
-        CCNode* currentNode = (CCNode*)pObj;
-        float objWidth = currentNode->getContentSize().width;
-
-        T obj = dynamic_cast<T>(pObj);
-
-        if (instanceof<T>(obj)) {
-            if (objWidth == width) {
-                if (idx == index) return obj;
-                idx++;
-            }
-        }
-    }
-    return nullptr;
-}
-
 CCSprite* getOriginalSelector(CCLayer* obj) {
     CCObject* pObj = nullptr;
 
@@ -478,8 +455,8 @@ void __fastcall ListButtonBar_switchedPage_H(gd::ListButtonBar* self, void*, int
     }
     else if(parent->getChildByTag(74356)) {
 
-        CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(parent, 38, 0);
-        CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidth<CCLayer*, CCSprite*>(parent, 38, 1);
+        CCSprite* selectSpriteP1primary = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(parent, 30, 40, 0);
+        CCSprite* selectSpriteP1secondary = getFromObjectContentSizeWidthBetween<CCLayer*, CCSprite*>(parent, 30, 40, 1);
         gd::GJGarageLayer* garageLayer = reinterpret_cast<gd::GJGarageLayer*>(parent);
 
         setSelectorPosColors(garageLayer, true);
