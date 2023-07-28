@@ -1268,11 +1268,10 @@ void __fastcall GJGarageLayer_onTab_H(gd::GJGarageLayer* self, void*, int tabNum
 DWORD WINAPI thread_func(void* hModule) {
     MH_Initialize();
 
-
-    AllocConsole();
+    /*AllocConsole();
     freopen("CONIN$", "r", stdin);
     freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
+    freopen("CONOUT$", "w", stderr);*/
 
     std::random_device rd;
     std::mt19937 gen(rd());
