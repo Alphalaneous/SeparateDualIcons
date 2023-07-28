@@ -1040,6 +1040,36 @@ bool __fastcall PlayLayer_init_H(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 
     callPosStreak = 0;
     if (!PlayLayer_init(self, level)) return false;
+
+    if (!usesDefault) {
+
+        gd::PlayerObject* player2 = self->m_pPlayer2;
+
+        if (player2->m_isShip) {
+            setFrame(player2, gd::IconType::kIconTypeShip);
+        }
+        else if (player2->m_isBall) {
+            setFrame(player2, gd::IconType::kIconTypeBall);
+        }
+        else if (player2->m_isBird) {
+            setFrame(player2, gd::IconType::kIconTypeUfo);
+        }
+        else if (player2->m_isDart) {
+            setFrame(player2, gd::IconType::kIconTypeWave);
+        }
+        else if (player2->m_isRobot) {
+            player2->m_pRobot->updateFrame(robot);
+        }
+        else if (player2->m_isSpider) {
+            player2->m_pSpider->updateFrame(spider);
+        }
+        else {
+            setFrame(player2, gd::IconType::kIconTypeCube);
+        }
+
+        setColor(player2);
+    }
+
     return true;
 }
 
@@ -1237,6 +1267,12 @@ void __fastcall GJGarageLayer_onTab_H(gd::GJGarageLayer* self, void*, int tabNum
 
 DWORD WINAPI thread_func(void* hModule) {
     MH_Initialize();
+
+
+    AllocConsole();
+    freopen("CONIN$", "r", stdin);
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
 
     std::random_device rd;
     std::mt19937 gen(rd());
