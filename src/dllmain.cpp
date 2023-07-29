@@ -1101,6 +1101,42 @@ void __fastcall PlayerObject_switchedToMode_H(gd::PlayerObject* self, void*, int
     }
 }
 
+void(__thiscall* PlayLayer_playExitDualEffect)(gd::PlayLayer*, gd::PlayerObject*);
+
+void __fastcall PlayLayer_playExitDualEffect_H(gd::PlayLayer* self, void*, gd::PlayerObject* player) {
+
+    //this is cheating, I know, but I don't wanna midfunction
+
+    gd::GameManager* manager = gd::GameManager::sharedState();
+    int oIcon = manager->m_nPlayerIconType;
+    int oShip = manager->m_nPlayerShip;
+    int oUFO = manager->m_nPlayerBird;
+    int oWave = manager->m_nPlayerDart;
+    int oBall = manager->m_nPlayerBall;
+    int oRobot = manager->m_nPlayerRobot;
+    int oSpider = manager->m_nPlayerSpider;
+
+    manager->setPlayerFrame(icon);
+    manager->setPlayerShip(ship);
+    manager->setPlayerBird(UFO);
+    manager->setPlayerDart(wave);
+    manager->setPlayerBall(ball);
+    manager->setPlayerRobot(robot);
+    manager->setPlayerSpider(spider);
+
+    PlayLayer_playExitDualEffect(self, player);
+
+    manager->setPlayerFrame(oIcon);
+    manager->setPlayerShip(oShip);
+    manager->setPlayerBird(oUFO);
+    manager->setPlayerDart(oWave);
+    manager->setPlayerBall(oBall);
+    manager->setPlayerRobot(oRobot);
+    manager->setPlayerSpider(oSpider);
+
+}
+
+
 bool isSecondPlayerInPlay(gd::PlayerObject* playerObject) {
 
     if (playerObject && gd::PlayLayer::get() && gd::PlayLayer::get()->m_pPlayer2) {
@@ -1426,7 +1462,11 @@ DWORD WINAPI thread_func(void* hModule) {
         GJGarageLayer_showBlackCircleWave_H,
         reinterpret_cast<void**>(&GJGarageLayer_showBlackCircleWave)
     );
-
+    MH_CreateHook(
+        reinterpret_cast<void*>(base + 0x208e20),
+        PlayLayer_playExitDualEffect_H,
+        reinterpret_cast<void**>(&PlayLayer_playExitDualEffect)
+    );
     MH_EnableHook(MH_ALL_HOOKS);
 
     loadIcons();
